@@ -1,12 +1,11 @@
 const MongoClient = require('mongodb').MongoClient;
-const config = require('../../config');
 
 //create a database connection to mongo
 const openDb = async function(options) {
-  if (!options.db) {
+  if (!options.mongo_name_db) {
     console.warn('\n--missing db name--');
   }
-  const url = 'mongodb://localhost:27017/' + options.db;
+  const url = options.mongo_url;
 
   return new Promise((resolve, reject) => {
     MongoClient.connect(
@@ -19,8 +18,8 @@ const openDb = async function(options) {
           console.log(err);
           reject(err);
         }
-        const db = client.db(options.db);
-        const collection = db.collection(config.collection);
+        const db = client.db(options.mongo_name_db);
+        const collection = db.collection(options.mongo_name_collection);
         //we use all of these.
         const obj = {
           db: db,

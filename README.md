@@ -174,7 +174,7 @@ you can grab whatever data you want, by passing-in a `custom` function. It takes
 ```js
 let obj={
 	file: path,
-	db: dbName,
+	db: mongo_name_db,
 	custom: function(doc) {
 		return {
 			_id: doc.title(),   //for duplicate-detection

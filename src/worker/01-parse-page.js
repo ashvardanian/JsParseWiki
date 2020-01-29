@@ -1,8 +1,7 @@
-const namespace = require('../../config').namespace;
 
-const shouldSkip = function(page) {
+const shouldSkip = function(page, options) {
   //is it a different namespace?
-  const wantNamespace = new RegExp('<ns>' + namespace + '</ns>');
+  const wantNamespace = new RegExp('<ns>' + options.namespace + '</ns>');
   if (wantNamespace.test(page) === false) {
     return true;
   }
@@ -10,9 +9,9 @@ const shouldSkip = function(page) {
 };
 
 //wikipedia xml → json
-const parsePage = function(txt, worker) {
+const parsePage = function(txt, worker, options) {
   //skip redirects, etc
-  if (shouldSkip(txt) === true) {
+  if (shouldSkip(txt, options) === true) {
     worker.ns += 1;
     return null;
   }

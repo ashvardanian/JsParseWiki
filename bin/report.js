@@ -1,7 +1,7 @@
 const chalk = require('chalk');
 const openDb = require('../src/lib/open-db');
 const niceNumber = require('../src/lib/fns').niceNumber;
-const dbName = process.argv[2] || 'enwiki';
+const mongo_name_db = process.argv[2] || 'enwiki';
 
 const showPage = async function(col) {
   let docs = await col.aggregate({
@@ -16,7 +16,7 @@ const showPage = async function(col) {
 //cool moves,
 const main = async function() {
   let obj = await openDb({
-    db: dbName
+    db: mongo_name_db
   });
   let count = await obj.col.count();
   console.log(chalk.blue('\n\n   ----------- ' + niceNumber(count) + ' pages total -----------\n'));

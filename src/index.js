@@ -1,8 +1,8 @@
-//stream a big wikipedia xml.bz2 file into mongodb
-//  because why not.
+// stream a big wikipedia xml.bz2 file into mongodb
+// because why not.
 const chalk = require('chalk');
 const prelim = require('./01-prepwork');
-const WorkerPool = require('./02-Worker-pool');
+const WorkerPool = require('./02-worker-pool');
 const hound = require('./03-logger');
 const openDB = require('./lib/open-db');
 const fns = require('./lib/fns');

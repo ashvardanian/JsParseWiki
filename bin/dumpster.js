@@ -1,10 +1,20 @@
 #! /usr/bin/env node
 let dumpster = require('../src');
+let defaults = require('../config');
 let yargs = require('yargs');
 let argv = yargs
   .usage('dumpster <xml filepath> [options]')
   .example('dumpster ./my/wikipedia-dump.xml --plaintext true --categories false')
+  .describe('log_interval', 'update interval [10000]')
   .describe('batch_size', 'how many articles to write to mongo at once [1000]')
+  .describe('workers', 'run in verbose mode [CPUCount]')
+  .describe('namespace', 'which wikipedia namespace to parse [0]')
+
+  .describe('mongo_url', ' ["mongodb://localhost:27017/"]')
+  .describe('mongo_name_db', ' ["wiki"]')
+  .describe('disambiguate_language_by_id_prefix', ' [false]')
+
+  // stuff that we will pass to `wtf_wikipedia`.
   .describe('skip_disambig', 'avoid storing disambiguation pages [true]')
   .describe('skip_redirects', 'avoid storing redirect pages [true]')
   .describe('categories', 'include category data? [true]')
@@ -17,17 +27,14 @@ let argv = yargs
   .describe('latex', 'include latex output [false]')
   .describe('verbose', 'run in verbose mode [false]')
   .describe('verbose_skip', 'log skipped disambigs & redirects [false]')
-  .describe('workers', 'run in verbose mode [CPUCount]').argv;
+  .argv;
 
-const defaults = {
-  batch_size: 500
-};
+
 const toBool = {
   true: true,
   false: false
 };
 
-let file = argv['_'][0];
 //set defaults to given arguments
 let options = Object.assign({}, defaults);
 Object.keys(options).forEach(k => {
@@ -40,17 +47,23 @@ Object.keys(options).forEach(k => {
   }
 });
 
-//grab the wiki file
-if (!file) {
+//grab the wiki wiki_dump_path
+let wiki_dump_path = argv['_'][0];
+if (!wiki_dump_path) {
   console.log('❌ please supply a filename to the wikipedia article dump');
   process.exit(1);
+} else {
+  options.wiki_dump_path = wiki_dump_path;
 }
-//try to make-up the language name for the db
-let db = 'wikipedia';
-if (file.match(/-(latest|\d{8})-pages-articles/)) {
-  db = file.match(/([a-z]+)-(latest|\d{8})-pages-articles/) || [];
-  db = db[1] || 'wikipedia';
+
+//try to make-up the language name for the name_db
+if (!options.mongo_name_db) {
+  let name_db = 'wikipedia';
+  if (wiki_dump_path.match(/-(latest|\d{8})-pages-articles/)) {
+    name_db = wiki_dump_path.match(/([a-z]+)-(latest|\d{8})-pages-articles/) || [];
+    name_db = name_db[1] || 'wikipedia';
+  }
+  options.mongo_name_db = name_db;  
 }
-options.file = file;
-options.db = db;
+
 dumpster(options);

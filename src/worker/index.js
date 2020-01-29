@@ -1,7 +1,7 @@
 const chalk = require('chalk');
 const sundayDriver = require('sunday-driver');
-const parsePage = require('./01-parsePage');
-const parseWiki = require('./02-parseWiki');
+const parsePage = require('./01-parse-page');
+const parseWiki = require('./02-parse-wiki');
 const writeDb = require('./03-write-db');
 const jsonfn = require('jsonfn').JSONfn;
 const niceNum = require('../lib/fns').niceNumber;
@@ -31,13 +31,13 @@ const doSection = async (optionStr, workerCount, workerNum) => {
   }, 20000 + workerNum * 15);
   // console.log(`#${workerNum} -   ${start}% → ${end}%`)
   const driver = {
-    file: options.file,
+    file: options.wiki_dump_path,
     start: `${start}%`,
     end: `${end}%`,
     splitter: '</page>',
     each: (xml, resume) => {
       // pull-out sections from this xml
-      let page = parsePage(xml, this);
+      let page = parsePage(xml, this, options);
       if (page !== null) {
         if (options.verbose === true) {
           console.log('   #' + workerNum + '  - ' + page.title);

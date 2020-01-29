@@ -24,7 +24,7 @@ class WorkerPool extends EventEmitter {
     });
     this.skippedRedirects = 0;
     this.skippedDisambigs = 0;
-    this.fileSize = fs.statSync(options.file)['size'];
+    this.fileSize = fs.statSync(options.wiki_dump_path)['size'];
     this.chunkSize = Math.floor(this.fileSize / this.workerCount);
   }
 

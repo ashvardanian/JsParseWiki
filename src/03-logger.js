@@ -7,11 +7,11 @@ const config = require('../config');
 class Logger {
   constructor(options) {
     this.options = options;
-    this.wait = config.logInterval;
+    this.wait = options.log_interval;
     this.please_stop = false;
   }
   open(cb) {
-    openDB(this.options.db, cb);
+    openDB(this.options.mongo_name_db, cb);
   }
   triggerNext() {
     setTimeout(() => {
