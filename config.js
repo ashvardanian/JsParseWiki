@@ -11,10 +11,6 @@ const defaults = {
     mongo_url: 'mongodb://localhost:27017/',
     mongo_name_db: 'wiki',
     mongo_name_collection: 'pages',
-    //if we are importing the entire dump we may want to assign 
-    //different artificial IDs to avoid collisions across same 
-    //titles in different languages.
-    disambiguate_language_by_id_prefix: false,
   };
 
   module.exports = defaults;

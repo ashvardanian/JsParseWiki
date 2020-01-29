@@ -55,11 +55,7 @@ const parseWiki = function(page, options, worker) {
     //if we are importing the entire dump we may want to assign 
     //different artificial IDs to avoid collisions across same 
     //titles in different languages.
-    data._id = data._id || data.title;
-    if (options.disambiguate_language_by_id_prefix === true) {
-      lang = data.language || data.lang
-      data._id = lang + ':' + data._id
-    }
+    data._id = data._id || data.pageID || data.title;
     data._id = encode.encodeStr(data._id);
     //create a fallback id, if none is found
     if (!data._id || data._id === true) {

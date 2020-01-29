@@ -9,10 +9,8 @@ let argv = yargs
   .describe('batch_size', 'how many articles to write to mongo at once [1000]')
   .describe('workers', 'run in verbose mode [CPUCount]')
   .describe('namespace', 'which wikipedia namespace to parse [0]')
-
   .describe('mongo_url', ' ["mongodb://localhost:27017/"]')
   .describe('mongo_name_db', ' ["wiki"]')
-  .describe('disambiguate_language_by_id_prefix', ' [false]')
 
   // stuff that we will pass to `wtf_wikipedia`.
   .describe('skip_disambig', 'avoid storing disambiguation pages [true]')
