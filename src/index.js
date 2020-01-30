@@ -48,16 +48,20 @@ const main = (options, done) => {
     });
   });
 
-  //handle ctrl-c gracefully
-  process.on('SIGINT', async function() {
+  handle = function() {
     logger.stop();
     workers.cleanup();
     oneSec(() => {
       process.exit();
     });
-  });
+  }
 
-  workers.
+  //handle ctrl-c gracefully
+  process.on('SIGINT', handle);
+  process.on('SIGTERM', handle);
+  process.on('SIGTSTP', function() {
+    console.log('Sleep and recovery not properly supported yet!')
+  })
 };
 
 module.exports = main;

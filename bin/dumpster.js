@@ -11,7 +11,7 @@ let argv = yargs
   
   .describe('log_interval', 'update interval [10000]')
   .describe('batch_size', 'how many articles to write to mongo at once [1000]')
-  .describe('workers', 'run in verbose mode [CPUCount]')
+  .describe('workers', 'run in parallel mode. set to 0 to use all the cores [CPUCount]')
   .describe('namespace', 'which wikipedia namespace to parse [0]')
   .describe('verbose', 'run in verbose mode [false]')
   .describe('verbose_skip', 'log skipped disambigs & redirects [false]')
@@ -59,33 +59,5 @@ Object.keys(options).forEach(k => {
   }
 });
 
-// Check if we are parsing a single file or an entire directory.
-let provided_path = argv['_'][0];
-let wiki_dump_paths = []
-if (!provided_path) {
-  console.log('❌ please supply a filename to the wikipedia article dump');
-  process.exit(1);
-} else {
-  if (fs.lstatSync(provided_path).isDirectory()) {
-		wiki_dump_paths = read_folder.recursiveFindByExtension(provided_path, 'xml')
-  } else {
-		wiki_dump_paths = [provided_path];
-  }
-}
-
-var options_per_path = []
-for (var path of wiki_dump_paths) {
-	var options_for_path = options
-  options_for_path.wiki_dump_path = path
-
-  //try to make-up the language name for the name_db
-  if (!options.mongo_name_db || options.mongo_name_db_auto) {
-		options_for_path.mongo_name_db = read_folder.suggestCollectionName(path) || 'wikipedia';  
-  }
-  if (!options.mongo_name_collection || options.mongo_name_collection_auto) {
-		options_for_path.mongo_name_collection = read_folder.suggestCollectionName(path) || 'pages'; 
-	}
-	options_per_path.push(options_for_path)
-}
-
-dumpster(options_per_path);
+options.wiki_dump_path = argv['_'][0];
+dumpster(options);

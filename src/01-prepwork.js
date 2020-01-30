@@ -1,10 +1,18 @@
 const chalk = require('chalk');
 const fs = require('fs');
 const defaults = require('../config');
+const cpuCount = require('os').cpus().length;
 
 const guardIO = function(options) {
   if (!options.wiki_dump_path || !fs.existsSync(options.wiki_dump_path)) {
     console.log(chalk.red('\n  --can\'t find file:  "' + chalk.blue(options.wiki_dump_path) + '" ---'));
+    console.log(
+      chalk.grey('     please supply a filename for the wikipedia article dump in xml format')
+    );
+    process.exit(1);
+  }
+  if (!fs.lstatSync(options.wiki_dump_path).isFile()) {
+    console.log(chalk.red('\n  --object is not a file:  "' + chalk.blue(options.wiki_dump_path) + '" ---'));
     console.log(
       chalk.grey('     please supply a filename for the wikipedia article dump in xml format')
     );
@@ -24,6 +32,9 @@ const validateOptions = function(options) {
     if (options[attrname] === undefined) {
       options[attrname] = defaults[attrname]; 
     }
+  }
+  if (options.workers === 0) {
+    options.workers = cpuCount
   }
 
   //make sure the file looks good..

@@ -73,13 +73,12 @@ class WorkerPool extends EventEmitter {
     for (let i = 0; i < self.workerCount; i += 1) {
       //stringify options, so it gets passed to the web worker
       const optionStr = jsonfn.stringify(options);
-      self.workerNodes.call.doWorkersPartInOneFile(optionStr, this.workerCount, i).then(() => {
+      self.workerNodes.call.doThisWorkersPart(optionStr, this.workerCount, i).then(() => {
         self.running += 1;
         //once all workers have been started..
         if (self.running === self.workerCount) {
           self.listen();
         }
-        return i;
       });
     }
   }

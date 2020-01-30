@@ -7,25 +7,8 @@ const jsonfn = require('jsonfn').JSONfn;
 const niceNum = require('../lib/fns').niceNumber;
 
 
-const doWorkersPartInEveryFile = async (optionStr, workerCount, workerNum) => {
-  const options = jsonfn.parse(optionStr);
-  if (typeof options.wiki_dump_path == "string") {
-    return _doWorkersPartInOneFile(options, workerCount, workerNum)
-  } else if (typeof options.wiki_dump_path == "array") {
-    for (var path of options.wiki_dump_path) {
-      var optionsCopy = options
-      optionsCopy.wiki_dump_path = path
-      return _doWorkersPartInOneFile(optionsCopy, workerCount, workerNum)
-    }
-  }
-}
-
-const doWorkersPartInOneFile = async (options, workerCount, workerNum) => {
-  const options = jsonfn.parse(optionStr);
-  return _doWorkersPartInOneFile(options, workerCount, workerNum)
-}
-
-const _doWorkersPartInOneFile = async (options, workerCount, workerNum) => {
+const doThisWorkersPart = async (optionStr, workerCount, workerNum) => {
+  const options = jsonfn.parse(optionStr)
   let pages = [];
   const percent = 100 / workerCount;
   const start = percent * workerNum;
@@ -102,6 +85,5 @@ const _doWorkersPartInOneFile = async (options, workerCount, workerNum) => {
 };
 
 module.exports = {
-  doWorkersPartInEveryFile: doWorkersPartInEveryFile,
-  doWorkersPartInOneFile: doWorkersPartInOneFile
+  doThisWorkersPart: doThisWorkersPart
 };
