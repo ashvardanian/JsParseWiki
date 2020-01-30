@@ -1,8 +1,8 @@
 {
-  "author": "Spencer Kelly <spencermountain@gmail.com> (http://spencermounta.in)",
+  "author": "Ashot Vardanian <ashvardanian@gmail.com> (https://ashvardanian.com)",
   "name": "dumpster-dive",
   "description": "get a wikipedia dump parsed into mongodb",
-  "version": "5.2.1",
+  "version": "6.0.0",
   "scripts": {
     "test": "node ./scripts/test.js",
     "cleanup": "rm /tmp/worker.logs && touch /tmp/worker.logs",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/spencermountain/wikipedia-to-mongodb.git"
+    "url": "git://github.com/ashvardanian/dumpster-dive.git"
   },
   "bin": {
     "dumpster": "./bin/dumpster.js"
