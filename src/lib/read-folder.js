@@ -21,7 +21,7 @@ function recursiveFindByExtension(base, ext, files, result) {
 
 function suggestCollectionName(path) {
     if (path.match(/-(latest|\d{8})-pages-articles/)) {
-        return path.match(/([a-z]+)-(latest|\d{8})-pages-articles/);
+        return path.match(/([a-z]+)-(latest|\d{8})-pages-articles/)[1];
     }
     return undefined
 }

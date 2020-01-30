@@ -58,7 +58,7 @@ const parseWiki = function(page, options, worker) {
     if (options.mongo_id_concatenate) {
       data._id = data.pageID + ':' + data.title;
     } else {
-      data._id = data._id || data.pageID || data.title;
+      data._id = data._id || data.title || data.pageID;
     }
     data._id = encode.encodeStr(data._id);
     //create a fallback id, if none is found

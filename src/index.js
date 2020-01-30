@@ -1,7 +1,7 @@
 // stream a big wikipedia xml.bz2 file into mongodb
 // because why not.
 const chalk = require('chalk');
-const prelim = require('./01-prepwork');
+const validateOptions = require('./01-prepwork');
 const WorkerPool = require('./02-worker-pool');
 const hound = require('./03-logger');
 const openDB = require('./lib/open-db');
@@ -28,7 +28,7 @@ const main = (options, done) => {
   done = done || noop;
 
   //make sure the file exists, and things
-  options = prelim(options);
+  options = validateOptions(options);
 
   //init workers
   const workers = new WorkerPool(options);
@@ -56,6 +56,8 @@ const main = (options, done) => {
       process.exit();
     });
   });
+
+  workers.
 };
 
 module.exports = main;

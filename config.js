@@ -17,9 +17,10 @@ const defaults = {
     // It's better for MongoDB, as it can store separate DBs in separate directories,
     // thus potentially storing them in different parts of SSD and achieving 
     // higher IOPs performance.
-    mongo_name_db: undefined,
+    // For that set: `mongo_name_db_auto: true`
+    mongo_name_db: 'wiki',
     mongo_name_collection: 'pages',
-    mongo_name_db_auto: true,
+    mongo_name_db_auto: false,
     mongo_name_collection_auto: false,
   
     // Stuff that we will pass to `wtf_wikipedia`.

@@ -3,6 +3,7 @@ let dumpster = require('../src');
 let defaults = require('../config');
 let read_folder = require('../src/lib/read-folder')
 let yargs = require('yargs');
+let fs = require('fs');
 
 let argv = yargs
   .usage('dumpster <xml filepath> [options]')
@@ -66,22 +67,25 @@ if (!provided_path) {
   process.exit(1);
 } else {
   if (fs.lstatSync(provided_path).isDirectory()) {
-	wiki_dump_paths = read_folder.recursiveFindByExtension(provided_path, 'xml')
+		wiki_dump_paths = read_folder.recursiveFindByExtension(provided_path, 'xml')
   } else {
-	wiki_dump_paths = [provided_path];
+		wiki_dump_paths = [provided_path];
   }
 }
 
-for (var path in wiki_dump_paths) {
-  options.wiki_dump_path = path
+var options_per_path = []
+for (var path of wiki_dump_paths) {
+	var options_for_path = options
+  options_for_path.wiki_dump_path = path
 
   //try to make-up the language name for the name_db
   if (!options.mongo_name_db || options.mongo_name_db_auto) {
-	options.mongo_name_db = read_folder.suggestCollectionName(path) || 'wikipedia';  
+		options_for_path.mongo_name_db = read_folder.suggestCollectionName(path) || 'wikipedia';  
   }
   if (!options.mongo_name_collection || options.mongo_name_collection_auto) {
-	options.mongo_name_collection = read_folder.suggestCollectionName(path) || 'pages'; 
-  }
-
-  dumpster(options);
+		options_for_path.mongo_name_collection = read_folder.suggestCollectionName(path) || 'pages'; 
+	}
+	options_per_path.push(options_for_path)
 }
+
+dumpster(options_per_path);
