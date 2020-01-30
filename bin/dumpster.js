@@ -58,6 +58,7 @@ Object.keys(options).forEach(k => {
 	options[k] = argv[k];
   }
 });
-
 options.wiki_dump_path = argv['_'][0];
+
+console.log('parsed arguments are:', options)
 dumpster(options);
