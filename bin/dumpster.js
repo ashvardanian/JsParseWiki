@@ -1,18 +1,32 @@
 #! /usr/bin/env node
 let dumpster = require('../src');
 let defaults = require('../config');
+let read_folder = require('../src/lib/read-folder')
 let yargs = require('yargs');
+
 let argv = yargs
   .usage('dumpster <xml filepath> [options]')
   .example('dumpster ./my/wikipedia-dump.xml --plaintext true --categories false')
+  
   .describe('log_interval', 'update interval [10000]')
   .describe('batch_size', 'how many articles to write to mongo at once [1000]')
   .describe('workers', 'run in verbose mode [CPUCount]')
   .describe('namespace', 'which wikipedia namespace to parse [0]')
+  .describe('verbose', 'run in verbose mode [false]')
+  .describe('verbose_skip', 'log skipped disambigs & redirects [false]')
+
+  // Output configuration.
   .describe('mongo_url', ' ["mongodb://localhost:27017/"]')
   .describe('mongo_name_db', ' ["wiki"]')
+  .describe('mongo_name_collection', ' ["wiki"]')
+  .describe('mongo_id_concatenate', 'concatenates the "pageID" and "title" into "_id" property of Mongo document [false]')
 
-  // stuff that we will pass to `wtf_wikipedia`.
+  // When running from a directory with multiple dump files, we can guess the name of each 
+  // language and create a separate databases or separate collections for each file.
+  .describe('mongo_name_db_auto', ' [false]')
+  .describe('mongo_name_collection_auto', ' [false]')
+
+  // Stuff that we will pass to `wtf_wikipedia`.
   .describe('skip_disambig', 'avoid storing disambiguation pages [true]')
   .describe('skip_redirects', 'avoid storing redirect pages [true]')
   .describe('categories', 'include category data? [true]')
@@ -23,8 +37,7 @@ let argv = yargs
   .describe('markdown', 'include markdown output [false]')
   .describe('html', 'include html output [false]')
   .describe('latex', 'include latex output [false]')
-  .describe('verbose', 'run in verbose mode [false]')
-  .describe('verbose_skip', 'log skipped disambigs & redirects [false]')
+
   .argv;
 
 
@@ -33,35 +46,42 @@ const toBool = {
   false: false
 };
 
-//set defaults to given arguments
+// Set defaults to given arguments.
 let options = Object.assign({}, defaults);
 Object.keys(options).forEach(k => {
   if (argv.hasOwnProperty(k) && argv[k] !== undefined) {
-    //coerce strings to booleans
-    if (toBool.hasOwnProperty(argv[k])) {
-      argv[k] = toBool[argv[k]];
-    }
-    options[k] = argv[k];
+	//coerce strings to booleans
+	if (toBool.hasOwnProperty(argv[k])) {
+	  argv[k] = toBool[argv[k]];
+	}
+	options[k] = argv[k];
   }
 });
 
-//grab the wiki wiki_dump_path
-let wiki_dump_path = argv['_'][0];
-if (!wiki_dump_path) {
+// Check if we are parsing a single file or an entire directory.
+let provided_path = argv['_'][0];
+let wiki_dump_paths = []
+if (!provided_path) {
   console.log('❌ please supply a filename to the wikipedia article dump');
   process.exit(1);
 } else {
-  options.wiki_dump_path = wiki_dump_path;
-}
-
-//try to make-up the language name for the name_db
-if (!options.mongo_name_db) {
-  let name_db = 'wikipedia';
-  if (wiki_dump_path.match(/-(latest|\d{8})-pages-articles/)) {
-    name_db = wiki_dump_path.match(/([a-z]+)-(latest|\d{8})-pages-articles/) || [];
-    name_db = name_db[1] || 'wikipedia';
+  if (fs.lstatSync(provided_path).isDirectory()) {
+	wiki_dump_paths = read_folder.recursiveFindByExtension(provided_path, 'xml')
+  } else {
+	wiki_dump_paths = [provided_path];
   }
-  options.mongo_name_db = name_db;  
 }
 
-dumpster(options);
+for (var path in wiki_dump_paths) {
+  options.wiki_dump_path = path
+
+  //try to make-up the language name for the name_db
+  if (!options.mongo_name_db || options.mongo_name_db_auto) {
+	options.mongo_name_db = read_folder.suggestCollectionName(path) || 'wikipedia';  
+  }
+  if (!options.mongo_name_collection || options.mongo_name_collection_auto) {
+	options.mongo_name_collection = read_folder.suggestCollectionName(path) || 'pages'; 
+  }
+
+  dumpster(options);
+}
