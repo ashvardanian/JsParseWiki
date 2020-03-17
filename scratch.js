@@ -1,4 +1,4 @@
-const dumpster = require('./src');
+const JsParseWiki = require('./src');
 const drop = require('./src/lib/drop-db');
 
 //144mb → 2.5 minutes = 57mb per worker per minute
@@ -26,5 +26,5 @@ const options = {
 
 //delete all pages
 drop(options).then(() => {
-  dumpster(options);
+  JsParseWiki(options);
 });

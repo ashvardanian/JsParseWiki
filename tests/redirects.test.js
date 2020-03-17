@@ -1,6 +1,6 @@
 const test = require('tape');
 const db = require('./db');
-const dumpster = require('../');
+const JsParseWiki = require('../');
 
 test('no-redirects', function(t) {
   const dbName = 'tempwikiskip';
@@ -12,7 +12,7 @@ test('no-redirects', function(t) {
     skip_disambig: true
   };
   db.drop(dbName, 'pages', () => {
-    dumpster(obj, () => {
+    JsParseWiki(obj, () => {
       db.firstTen(dbName, docs => {
         t.equal(docs.length, 5, 'five records');
 

@@ -1,4 +1,4 @@
-//first, run dumpster with {} piped to a text file
+//first, run JsParseWiki with {} piped to a text file
 // npm run watch > ./tmp.txt
 const sundayDriver = require('sunday-driver');
 

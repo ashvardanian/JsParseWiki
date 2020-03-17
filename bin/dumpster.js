@@ -1,13 +1,13 @@
 #! /usr/bin/env node
-let dumpster = require('../src');
+let JsParseWiki = require('../src');
 let defaults = require('../config');
 let read_folder = require('../src/lib/read-folder')
 let yargs = require('yargs');
 let fs = require('fs');
 
 let argv = yargs
-  .usage('dumpster <xml filepath> [options]')
-  .example('dumpster ./my/wikipedia-dump.xml --plaintext true --categories false')
+  .usage('JsParseWiki <xml filepath> [options]')
+  .example('JsParseWiki ./my/wikipedia-dump.xml --plaintext true --categories false')
   
   .describe('log_interval', 'update interval [10000]')
   .describe('batch_size', 'how many articles to write to mongo at once [1000]')
@@ -61,4 +61,4 @@ Object.keys(options).forEach(k => {
 options.wiki_dump_path = argv['_'][0];
 
 console.log('parsed arguments are:', options)
-dumpster(options);
+JsParseWiki(options);

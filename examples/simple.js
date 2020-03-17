@@ -1,4 +1,4 @@
-const dumpster = require('../src');
+const JsParseWiki = require('../src');
 const defaults = require('../config');
 const read_folder = require('../src/lib/read-folder')
 
@@ -7,6 +7,6 @@ console.log('Will import following file:', wiki_dump_paths[0])
 
 var configs = defaults
 configs.wiki_dump_path = wiki_dump_paths[0]
-dumpster(configs, () => {
+JsParseWiki(configs, () => {
     console.log('Finita!')
 });

@@ -1,6 +1,6 @@
 {
   "author": "Ashot Vardanian <ashvardanian@gmail.com> (https://ashvardanian.com)",
-  "name": "dumpster-dive",
+  "name": "JsParseWiki",
   "description": "get a wikipedia dump parsed into mongodb",
   "version": "6.0.0",
   "scripts": {
@@ -11,10 +11,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/ashvardanian/dumpster-dive.git"
+    "url": "git://github.com/ashvardanian/JsParseWiki.git"
   },
   "bin": {
-    "dumpster": "./bin/dumpster.js"
+    "JsParseWiki": "./bin/JsParseWiki.js"
   },
   "engines": {
     "node": ">=6.0.0"

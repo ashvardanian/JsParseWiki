@@ -1,6 +1,6 @@
 const test = require('tape');
 const db = require('./db');
-const dumpster = require('../');
+const JsParseWiki = require('../');
 
 test('plaintext', function(t) {
   const dbName = 'plainwiki';
@@ -13,7 +13,7 @@ test('plaintext', function(t) {
     markdown: true
   };
   db.drop(dbName, 'pages', () => {
-    dumpster(obj, () => {
+    JsParseWiki(obj, () => {
       db.firstTen(dbName, docs => {
         t.equal(docs.length, 7, '7 records');
         const doc = docs.find(d => d._id === 'Hello');

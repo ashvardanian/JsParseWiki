@@ -13,7 +13,7 @@
 
 ## v3
 * MASSIVE SPEEDUP! full re-write by @devrim 🙏 to fix #59
-* rename from `wikipedia-to-mongo` to `dumpster-dive`
+* rename from `wikipedia-to-mongo` to `JsParseWiki`
 * use wtf_wikipedia v3 (a big re-factor too!)
 * use `line-by-line`, and `worker-nodes` to run parsing in parallel
 ### v3.1.0
